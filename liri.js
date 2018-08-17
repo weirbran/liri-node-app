@@ -42,7 +42,11 @@ function twitter() {
       console.log(err);
     } else {
       //keep working on this
-      for (var i = tweets.length - 1; i >= 0; i--) {
+      // tweets.forEach(function() {
+      //   console.log(tweets[i].created_at);
+      //   console.log(tweets[i].text);
+      // });
+      for (var i = tweets.length - 1; i >= tweets.length - 20; i--) {
         console.log(tweets[i].created_at);
         console.log(tweets[i].text);
       }
@@ -80,11 +84,15 @@ function songSearch() {
 function omdb() {
   var movieName = "";
 
-  for (var i = 3; i < nodeArgs.length; i++) {
-    if (i > 2 && i < nodeArgs.length) {
-      movieName = movieName + "+" + nodeArgs[i];
-    } else {
-      movieName += nodeArgs[i];
+  if (nodeArgs.length < 4) {
+    movieName = "mr nobody";
+  } else {
+    for (var i = 3; i < nodeArgs.length; i++) {
+      if (i > 2 && i < nodeArgs.length) {
+        movieName = movieName + "+" + nodeArgs[i];
+      } else {
+        movieName += nodeArgs[i];
+      }
     }
   }
 
@@ -98,14 +106,17 @@ function omdb() {
 
   request(queryUrl, function(error, response, body) {
     if (!error && response.statusCode === 200) {
-      // Parse the body of the site and recover just the imdbRating
-      // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
       console.log("Title: " + JSON.parse(body).Title);
       console.log("Release Year: " + JSON.parse(body).Year);
       console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-      console.log(
-        "Rotten Tomatoes Score: " + JSON.parse(body).Ratings[1].Value
-      );
+
+      if (!JSON.parse(body).Ratings[1]) {
+        console.log("Rotten Tomatoes Score: none");
+      } else {
+        console.log(
+          "Rotten Tomatoes Score: " + JSON.parse(body).Ratings[1].Value
+        );
+      }
       console.log("Country: " + JSON.parse(body).Country);
       console.log("Language: " + JSON.parse(body).Language);
       console.log("Plot: " + JSON.parse(body).Plot);
@@ -119,15 +130,30 @@ function doWhatItSays() {
     if (err) {
       console.log(err);
     } else {
-      console.log(data);
+      // console.log(data);
       var newArg = data.split(",");
-
-      console.log(newArg[0]);
-      console.log(newArg[1]);
+      // console.log(newArg[1]);
 
       command = newArg[0];
-      query = newArg[1];
+      console.log(command);
+
+      switch (command) {
+        case "my-tweets":
+          twitter();
+          break;
+
+        case "spotify-this-song":
+          songSearch();
+          break;
+
+        case "movie-this":
+          omdb();
+          break;
+
+        case "do-what-it-says":
+          doWhatItSays();
+          break;
+      }
     }
   });
-  return command, query;
 }

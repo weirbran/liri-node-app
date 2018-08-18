@@ -41,11 +41,6 @@ function twitter() {
     if (err) {
       console.log(err);
     } else {
-      //keep working on this
-      // tweets.forEach(function() {
-      //   console.log(tweets[i].created_at);
-      //   console.log(tweets[i].text);
-      // });
       for (var i = tweets.length - 1; i >= tweets.length - 20; i--) {
         console.log(tweets[i].created_at);
         console.log(tweets[i].text);
@@ -96,13 +91,8 @@ function omdb() {
     }
   }
 
-  // Then run a request to the OMDB API with the movie specified
-  //store the apikey in the .env ????
   var queryUrl =
     "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-
-  // This line is just to help us debug against the actual URL.
-  console.log(queryUrl);
 
   request(queryUrl, function(error, response, body) {
     if (!error && response.statusCode === 200) {
@@ -130,10 +120,7 @@ function doWhatItSays() {
     if (err) {
       console.log(err);
     } else {
-      // console.log(data);
       var newArg = data.split(",");
-      // console.log(newArg[1]);
-
       command = newArg[0];
       console.log(command);
 
